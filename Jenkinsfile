@@ -8,7 +8,7 @@ pipeline {
         // Build the code
         stage('npm get dependencies') {
             steps {
-                withNPM() {
+                withNPM(npmrcConfig:'fd22ba3b-8b19-4ac7-bf48-218e6d7943e9')) {
                     sh 'npm install'
                 }
             }
@@ -16,7 +16,7 @@ pipeline {
         // Run unit test
         stage('Run Unit Test') {
             steps {
-                withNPM() {
+                withNPM(npmrcConfig:'fd22ba3b-8b19-4ac7-bf48-218e6d7943e9')) {
                     sh 'npm test'
                 }
             }
