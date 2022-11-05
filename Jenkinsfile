@@ -8,17 +8,13 @@ pipeline {
         // Build the code
         stage('npm get dependencies') {
             steps {
-                nodejs(nodeJSInstallationName: 'nodejs', configId: 'fd22ba3b-8b19-4ac7-bf48-218e6d7943e9') {
-                    sh 'npm install'
-                }
+               sh 'npm install'
             }
         }
         // Run unit test
         stage('Run Unit Test') {
             steps {
-                nodejs(nodeJSInstallationName: 'nodejs', configId: 'fd22ba3b-8b19-4ac7-bf48-218e6d7943e9') {
-                    sh 'npm test'
-                }
+               sh 'npm test'
             }
         }
         // Run unit test
