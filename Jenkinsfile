@@ -15,8 +15,10 @@ pipeline {
         }
         // Run unit test
         stage('Run Unit Test') {
-            withNPM() {
-                sh 'npm test'
+            steps {
+                withNPM() {
+                    sh 'npm test'
+                }
             }
         }
         // Run unit test
