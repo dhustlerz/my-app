@@ -6,15 +6,17 @@ pipeline {
     stages {
 
         // Build the code
-            stage('npm get dependencies') {
-                steps {
-                  sh 'cd app && npm install'
+        stage('npm get dependencies') {
+            steps {
+                withNPM() {
+                    sh 'npm install'
                 }
             }
+        }
         // Run unit test
         stage('Run Unit Test') {
-            steps {
-              sh 'cd app && npm test'
+            withNPM() {
+                sh 'npm test'
             }
         }
         // Run unit test
