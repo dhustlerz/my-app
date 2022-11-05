@@ -16,7 +16,7 @@ pipeline {
             steps {
                sh 'pwd'
                sh 'ls -l'
-               sh 'npm test'
+               sh 'cd app && npm test'
             }
         }
         // Run unit test
