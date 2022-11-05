@@ -7,7 +7,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test.js",
+    "test": "mocha --recursive --timeout 60000 --exit",
     "start": "node server.js"
   },
   "author": "Jashanpreet Singh",
