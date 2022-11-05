@@ -26,8 +26,7 @@ pipeline {
               sh 'docker tag ibt-student:latest 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
             }
         }
-        stage("Push to ECR") {
-        stage('Deploy') {
+        stage('Push to ECR') {
             steps {
                 script{
                     docker.withRegistry('https://720766170633.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-2:ibt-ecr') {
