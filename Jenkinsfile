@@ -8,7 +8,7 @@ pipeline {
         // Build the code
             stage('npm get dependencies') {
                 steps {
-                  sh 'cd add && npm install'
+                  sh 'cd app && npm install'
                 }
             }
         // Run unit test
