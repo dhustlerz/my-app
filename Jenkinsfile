@@ -22,8 +22,19 @@ pipeline {
         // Run unit test
         stage('build Docker Container') {
             steps {
-              sh 'docker build -t ibt-student .'
+              sh 'docker build -t ibt-student -f Dockerfile .'
               sh 'docker tag ibt-student:latest 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
+            }
+        }
+        stage("Push to ECR") {
+        stage('Deploy') {
+            steps {
+                script{
+                    docker.withRegistry('https://720766170633.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-2:ibt-ecr') {
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                    }
+                }
             }
         }
 //         // run sonarqube test
