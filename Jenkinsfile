@@ -29,7 +29,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 script{
-                    docker.withRegistry('https://720766170633.dkr.ecr.us-east-2.amazonaws.com', 'ibt-ecr') {
+                    docker.withRegistry('630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
                     app.push("${env.BUILD_NUMBER}")
                     app.push("latest")
                     }
