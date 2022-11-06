@@ -5,13 +5,11 @@ pipeline {
     }
     stages {
 
-        // Build the code
         stage('npm get dependencies') {
             steps {
                sh 'cd app && npm install'
             }
         }
-        // Run unit test
         stage('Run Unit Test') {
             steps {
                sh 'pwd'
@@ -19,7 +17,6 @@ pipeline {
                sh 'cd app && npm test && ls -l'
             }
         }
-        // Run unit test
         stage('build Docker Container') {
             steps {
               sh 'docker build -t ibt-student -f Dockerfile .'
@@ -30,8 +27,11 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                    // build image
+                    def customImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
+
+                    // push image
+                    customImage.push()
                     }
                 }
             }
