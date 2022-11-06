@@ -19,16 +19,20 @@ pipeline {
         }
         stage('build Docker Container') {
             steps {
-              sh 'docker build -t ibt-student -f Dockerfile .'
-              sh 'docker tag ibt-student:latest 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
+                script {
+                    // build image
+                    def customImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
+                }
+//               sh 'docker build -t ibt-student -f Dockerfile .'
+//               sh 'docker tag ibt-student:latest 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
             }
         }
         stage('Push to ECR') {
             steps {
                 script{
                     docker.withRegistry('https://630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
-                    // build image
-                    def customImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
+//                     // build image
+//                     def customImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
 
                     // push image
                     customImage.push()
