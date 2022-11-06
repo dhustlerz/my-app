@@ -27,7 +27,11 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('https://630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
-                    app.push("latest")
+                    // build image
+                    def customImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
+
+                    // push image
+                    customImage.push()
                     }
                 }
             }
