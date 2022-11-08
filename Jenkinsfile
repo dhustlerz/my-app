@@ -26,13 +26,7 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 script{
-                    sh 'trivy image 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
-                }
-            }
-        }
-        stage('Trivy Scan') {
-            steps {
-                script{
+                    sh 'trivy image nginx:630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
                     //https://<AwsAccountNumber>.dkr.ecr.<region>.amazonaws.com/ibt-student', 'ecr:<region>:<credentialsId>
                     docker.withRegistry('https://630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
                     // build image
@@ -41,6 +35,11 @@ pipeline {
                     myImage.push()
                     }
                 }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                sh 'trivy image --format template --template \"@/home/vijeta1/contrib/html.tpl\" --output trivy_report.html 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
             }
         }
 //         stage('Deploy to DEV') {
@@ -57,7 +56,6 @@ pipeline {
 //                 )
 //             }
 //         }
-
 //         // run sonarqube test
 //         stage('Run Sonarqube') {
 //             environment {
@@ -149,6 +147,5 @@ pipeline {
                 reportName: 'Trivy Scan',
                 ])
             }
-//             deleteDir()
         }
 }
