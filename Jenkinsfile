@@ -26,7 +26,6 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 script{
-                    sh 'trivy image nginx:630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
                     //https://<AwsAccountNumber>.dkr.ecr.<region>.amazonaws.com/ibt-student', 'ecr:<region>:<credentialsId>
                     docker.withRegistry('https://630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
                     // build image
