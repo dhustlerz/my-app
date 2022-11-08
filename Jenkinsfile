@@ -12,9 +12,7 @@ pipeline {
         }
         stage('Run Unit Test') {
             steps {
-               sh 'pwd'
-               sh 'ls -l'
-               sh 'cd app && npm test && ls -l'
+               sh 'cd app && npm test'
             }
         }
         stage('build Docker Container') {
@@ -28,6 +26,14 @@ pipeline {
         stage('Push to ECR') {
             steps {
                 script{
+                    sh 'trivy image 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
+                }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                script{
+                    //https://<AwsAccountNumber>.dkr.ecr.<region>.amazonaws.com/ibt-student', 'ecr:<region>:<credentialsId>
                     docker.withRegistry('https://630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student', 'ecr:us-east-2:ibt-ecr') {
                     // build image
                     def myImage = docker.build("630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest")
@@ -37,20 +43,21 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to DEV') {
-            steps {
-                ansiblePlaybook(
-                    playbook: 'ansible/deploy-docker.yaml',
-                    inventory: 'ansible/hosts',
-                    credentialsId: 'vm-ssh',
-                    colorized: true,
-                    extraVars: [
-                        "myHosts" : "devServer",
-                        "artifact": "${WORKSPACE}/target/hello-maven-1.0-SNAPSHOT.war"
-                    ]
-                )
-            }
-        }
+//         stage('Deploy to DEV') {
+//             steps {
+//                 ansiblePlaybook(
+//                     playbook: 'ansible/deploy-docker.yaml',
+//                     inventory: 'ansible/hosts',
+//                     credentialsId: 'vm-ssh',
+//                     colorized: true,
+//                     extraVars: [
+//                         "myHosts" : "devServer",
+//                         "artifact": "${WORKSPACE}/target/hello-maven-1.0-SNAPSHOT.war"
+//                     ]
+//                 )
+//             }
+//         }
+
 //         // run sonarqube test
 //         stage('Run Sonarqube') {
 //             environment {
@@ -129,4 +136,19 @@ pipeline {
 //             }
 //         }
     }
+    post {
+        always {
+            archiveArtifacts artifacts: "trivy_report.html", fingerprint: true
+
+            publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: '.',
+                reportFiles: 'trivy_report.html',
+                reportName: 'Trivy Scan',
+                ])
+            }
+            deleteDir()
+        }
 }
