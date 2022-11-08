@@ -15,6 +15,17 @@ pipeline {
                sh 'cd app && npm test'
             }
         }
+        // run sonarqube test
+        stage('Run Sonarqube') {
+            environment {
+                scannerHome = tool 'ibt-sonarqube';
+            }
+            steps {
+              withSonarQubeEnv(credentialsId: 'SQ-student', installationName: 'IBT sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner"
+              }
+            }
+        }
         stage('build Docker Container') {
             steps {
                 script {
