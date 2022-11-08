@@ -37,6 +37,20 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to DEV') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'ansible/deploy-docker.yaml',
+                    inventory: 'ansible/hosts',
+                    credentialsId: 'vm-ssh',
+                    colorized: true,
+                    extraVars: [
+                        "myHosts" : "devServer",
+                        "artifact": "${WORKSPACE}/target/hello-maven-1.0-SNAPSHOT.war"
+                    ]
+                )
+            }
+        }
 //         // run sonarqube test
 //         stage('Run Sonarqube') {
 //             environment {

@@ -1,4 +1,7 @@
-FROM node:19-alpine3.15
+#!/bin/bash
+FROM --platform=linux/amd64 node:19-alpine3.15
+
+#FROM --platform=linux/amd64 node:11.15
 
 ENV MONGO_DB_USERNAME=admin \
     MONGO_DB_PWD=password

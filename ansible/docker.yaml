@@ -1,6 +1,6 @@
 # Ref: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-18-04
 ---
-- hosts: prodServer
+- hosts: all
   become: true
   remote_user: root
 #  vars_files:
@@ -17,7 +17,7 @@
 
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'awscli']
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -50,8 +50,47 @@
         state: present
       with_sequence: count={{ create_containers }}
 
+    - name: Delete content & directory
+      file:
+        state: absent
+        path: /usr/local/bin/docker-compose
+
     - name: Install docker-compose
       get_url:
-        url: https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+        url: https://github.com/docker/compose/releases/download/v2.12.0/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: 'u+x,g+x'
+
+    - name: Install and upgrade pip
+      pip:
+        name: pip
+        extra_args: --upgrade
+        executable: pip3
+
+    - name: Install pyOpenSSL
+      pip:
+        name: pyOpenSSL
+        extra_args: --upgrade
+        executable: pip3
+
+#    - name: Install docker-compose python package
+#      ansible.builtin.pip:
+#        name: docker-compose
+#        extra_args: --upgrade
+#        executable: pip3
+
+#    - name: Install pyOpenSSL
+#      ansible.builtin.pip:
+#        name: pyOpenSSL
+
+
+
+#    - name: Copy aws creds
+#      copy:
+#        src: aws.creds
+#        dest: ~/.aws/credentials
+
+#    - name: Install package dependencies.
+#      package: name={{ item }} state=present
+#      with_items:
+#        - awscli
