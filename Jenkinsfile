@@ -52,20 +52,25 @@ pipeline {
                 sh 'trivy image --format template --template "@/var/lib/jenkins/trivy_tmp/html.tpl" --output trivy_report.html 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
             }
         }
-//         stage('Deploy to DEV') {
-//             steps {
-//                 ansiblePlaybook(
-//                     playbook: 'ansible/deploy-docker.yaml',
-//                     inventory: 'ansible/hosts',
-//                     credentialsId: 'vm-ssh',
-//                     colorized: true,
-//                     extraVars: [
-//                         "myHosts" : "devServer",
-//                         "artifact": "${WORKSPACE}/target/hello-maven-1.0-SNAPSHOT.war"
-//                     ]
-//                 )
-//             }
-//         }
+        stage('Deploy to DEV') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'ibt-ecr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    ansiblePlaybook(
+                      playbook: 'ansible/deploy-docker.yaml',
+                      inventory: 'ansible/hosts',
+                      credentialsId: 'vm-ssh',
+                      colorized: true,
+                      extraVars: [
+                          "myHosts" : "devServer",
+                          "compose_file": "docker-compose.yaml",
+                          "access_key": USERNAME
+                          "access_secret": PASSWORD
+                      ]
+                  )
+                }
+
+            }
+        }
 //         // run sonarqube test
 //         stage('Run Sonarqube') {
 //             environment {

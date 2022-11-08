@@ -1,6 +1,6 @@
 # Ref: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-18-04
 ---
-- hosts: all
+- hosts: "{{myHosts}}"
   become: true
   remote_user: root
 #  vars_files:
@@ -87,7 +87,7 @@
 
 #    - name: Copy aws creds
 #      copy:
-#        src: aws.creds
+#        src: aws.creds.j2
 #        dest: ~/.aws/credentials
 
 #    - name: Install package dependencies.
