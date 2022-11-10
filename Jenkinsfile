@@ -64,7 +64,7 @@ pipeline {
                       extraVars: [
                           "myHosts" : "devServer",
                           "compose_file": "docker-compose.yaml",
-                          "access_key": USERNAME
+                          "access_key": USERNAME,
                           "access_secret": PASSWORD
                       ]
                   )
