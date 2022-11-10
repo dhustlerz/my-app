@@ -70,7 +70,7 @@ pipeline {
                       colorized: true,
                       extraVars: [
                           "myHosts" : "devServer",
-                          "compose_file": "docker-compose.yaml",
+                          "compose_file": "${WORKSPACE}/docker-compose.yaml",
                           "access_key": AWS_ACCESS_KEY_ID,
                           "access_secret": AWS_SECRET_ACCESS_KEY
                       ]
