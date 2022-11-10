@@ -6,50 +6,22 @@
   become_user: root
 
   tasks:
-#    - name: Delete content & directory
-#      file:
-#        state: absent
-#        path: /usr/local/bin/docker-compose
-#
-#    - name: Install docker-compose
-#      get_url:
-#        url: https://github.com/docker/compose/releases/download/v2.12.0/docker-compose-linux-x86_64
-#        dest: /usr/local/bin/docker-compose
-#        mode: 'u+x,g+x'
-#
-#    - name: Install and upgrade pip
-#      pip:
-#        name: pip
-#        extra_args: --upgrade
-#        executable: pip3
-#
-#    - name: Install pyOpenSSL
-#      pip:
-#        name: pyOpenSSL
-#        extra_args: --upgrade
-#        executable: pip3
-#
-#    - name: Install docker-compose python package
-#      ansible.builtin.pip:
-#        name: docker-compose
-#        extra_args: --upgrade
-#        executable: pip3
-
     - name: Creates directory
       file:
         path: .aws
         state: directory
 
     - name: Copy aws creds
-      copy:
-        src: aws.creds.j2
+      template:
+        src: "aws.creds.j2"
         dest: ~/.aws/credentials
 
     - name: Copy docker compose file
       copy:
-        src: {{ compose_file }}
+        src: "{{compose_file}}"
         dest: /opt/webapps/
         mode: 0755
+
 
     - name: ecr docker get-authorization-token
       shell: "aws ecr get-authorization-token  \
