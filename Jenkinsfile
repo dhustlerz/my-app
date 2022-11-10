@@ -55,7 +55,13 @@ pipeline {
         }
         stage('Deploy to DEV') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ibt-ecr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+//                 withCredentials([usernamePassword(credentialsId: 'ibt-ecr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: "ibt-ecr",
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]){
                     ansiblePlaybook(
                       playbook: 'ansible/deploy-docker.yaml',
                       inventory: 'ansible/hosts',
@@ -64,8 +70,8 @@ pipeline {
                       extraVars: [
                           "myHosts" : "devServer",
                           "compose_file": "docker-compose.yaml",
-                          "access_key": USERNAME,
-                          "access_secret": PASSWORD
+                          "access_key": AWS_ACCESS_KEY_ID,
+                          "access_secret": AWS_SECRET_ACCESS_KEY
                       ]
                   )
                 }
