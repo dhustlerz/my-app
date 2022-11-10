@@ -1,6 +1,6 @@
 # Ref: https://www.digitalocean.com/community/tutorials/how-to-use-ansible-to-install-and-set-up-docker-on-ubuntu-18-04
 ---
-- hosts: "{{myHosts}}"
+- hosts: all
   become: true
   remote_user: root
 #  vars_files:
@@ -73,24 +73,3 @@
         extra_args: --upgrade
         executable: pip3
 
-#    - name: Install docker-compose python package
-#      ansible.builtin.pip:
-#        name: docker-compose
-#        extra_args: --upgrade
-#        executable: pip3
-
-#    - name: Install pyOpenSSL
-#      ansible.builtin.pip:
-#        name: pyOpenSSL
-
-
-
-#    - name: Copy aws creds
-#      copy:
-#        src: aws.creds.j2
-#        dest: ~/.aws/credentials
-
-#    - name: Install package dependencies.
-#      package: name={{ item }} state=present
-#      with_items:
-#        - awscli

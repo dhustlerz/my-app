@@ -53,9 +53,21 @@ pipeline {
                 sh 'trivy image --format template --template "@/var/lib/jenkins/trivy_tmp/html.tpl" --output trivy_report.html 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest'
             }
         }
+       stage('Configure our VM(s)') {
+           steps {
+               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                   ansiblePlaybook(
+                       playbook: 'ansible/docker.yaml',
+                       inventory: 'ansible/hosts',
+                       credentialsId: 'vm-ssh',
+                       colorized: true
+                   )
+               }
+           }
+       }
+
         stage('Deploy to DEV') {
             steps {
-//                 withCredentials([usernamePassword(credentialsId: 'ibt-ecr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
                 sh 'ls -l'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
