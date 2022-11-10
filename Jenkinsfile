@@ -15,6 +15,7 @@ pipeline {
                sh 'cd app && npm test'
             }
         }
+
         // run sonarqube test
 //         stage('Run Sonarqube') {
 //             environment {
