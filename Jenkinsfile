@@ -56,6 +56,7 @@ pipeline {
         stage('Deploy to DEV') {
             steps {
 //                 withCredentials([usernamePassword(credentialsId: 'ibt-ecr', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])
+                sh 'ls -l'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: "ibt-ecr",
