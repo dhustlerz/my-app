@@ -23,8 +23,6 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
   my-app:
     image: 630437092685.dkr.ecr.us-east-2.amazonaws.com/ibt-student:latest
-    depends_on:
-      - mongodb
     ports:
       - 3000:3000
 volumes:
